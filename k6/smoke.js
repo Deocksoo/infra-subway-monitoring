@@ -40,6 +40,31 @@ export default function ()  {
         },
     };
     let myObjects = http.get(`${BASE_URL}/members/me`, authHeaders).json();
-    check(myObjects, { 'retrieved member': (obj) => obj.id != 0 });
+    check(myObjects, { 'retrieved member': (obj) => obj.id != 0, });
+
+    let stations = http.get(`${BASE_URL}/stations`);
+    check(stations, {
+        'is status 200': response => response.status === 200,
+        'result': response => response.json().length != 0
+    })
+
+    let lines = http.get(`${BASE_URL}/lines`);
+    check(lines, {
+        'is status 200': response => response.status === 200,
+        'result': response => response.json().length != 0
+    })
+
+    let line2 = http.get(`${BASE_URL}/lines/22`);
+    check(line2, {
+        'is status 200': response => response.status === 200,
+        'result': response => response.json().id != 0
+    })
+
+    let path = http.get(`${BASE_URL}/paths/?source=3&target=6`);
+    check(path, {
+        'is status 200': response => response.status === 200,
+        'result': response => response.json().stations.length != 0
+    })
+
     sleep(1);
 };
